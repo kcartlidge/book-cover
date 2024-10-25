@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Book Cover Generator</title>
+    <style>
+        html,
+        body,
+        * {
+            cursor: default;
+        }
+
+        a,
+        input,
+        select,
+        button {
+            cursor: pointer;
+        }
+
+        input[type=text] {
+            cursor: text;
+        }
+
+        body {
+            overflow-y: scroll;
+            box-sizing: border-box;
+            font-family: Verdana, Tahoma, Georgia, 'Open Sans', system-ui, -apple-system, sans-serif;
+            font-size: 12pt;
+            background-color: #eee;
+        }
+
+        a,
+        a:active,
+        a:link,
+        a:visited,
+        a:hover {
+            color: #427de2;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            margin: 0 0 0 1rem;
+        }
+
+        h2 {
+            font-size: 0.9rem;
+            font-weight: normal;
+            margin: 0.25rem 0 0.5rem 1rem;
+            color: #666;
+        }
+
+        .container {
+            text-align: left;
+            max-width: 65rem;
+            margin: 0 auto;
+        }
+
+        main {
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .form-container {
+            min-width: 20rem;
+            flex: 1;
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2);
+        }
+
+        .preview-container {
+            flex: 1;
+            position: sticky;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-row {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        label {
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .hint {
+            font-size: 0.7rem;
+            color: #666;
+            margin: 0.5rem 0 1rem 0;
+        }
+
+        .styles span {
+            margin-left: 0.5rem;
+        }
+
+        input[type="text"],
+        select {
+            font-family: Consolas, Monaco, 'Courier New', Courier, monospace;
+            padding: 0.3rem;
+            border: 0.1rem solid #ddd;
+            border-radius: 0.2rem;
+        }
+
+        input[type="text"] {
+            width: 90%;
+            font-size: 1.1rem;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        button {
+            background: #294f90;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        button:hover {
+            background: #2256b1;
+        }
+
+        canvas {
+            max-width: 90%;
+            max-height: 30rem;
+            height: auto;
+            background: white;
+        }
+
+        input[type="color"] {
+            border: solid 1px #555;
+            width: 2rem;
+            height: 2rem;
+            cursor: pointer;
+            vertical-align: middle;
+            position: relative;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+        }
+
+        /* Ensure select and color input are aligned */
+        .input-row select,
+        .input-row input[type="color"] {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Book Cover Generator (1800 x 2700)</h1>
+        <h2>
+            &copy; 2024 K Cartlidge
+            | <a href="https://github.com/kcartlidge/book-cover" target="_blank">View in GitHub</a>
+            | <a href="https://kcartlidge.com" target="_blank">Visit kcartlidge.com</a>
+        </h2>
+        <main>
+            <div class="form-container">
+                <div class="hint">Use "|" to split long text across multiple lines.</div>
+                <div class="form-group">
+                    <label>Title</label>
+                    <div class="input-row">
+                        <div>
+                            <input type="text" id="title" placeholder="Enter book title"
+                                value="Fellowship | of the | Ring"><br />
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <select id="titleFont">
+                            <option value="Verdana" selected>Verdana</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Trebuchet MS">Trebuchet MS</option>
+                            <option value="Impact">Impact</option>
+                            <option value="Palatino">Palatino</option>
+                        </select>
+                        <select id="titleFontSize">
+                            <option value="64">64</option>
+                            <option value="96">96</option>
+                            <option value="128">128</option>
+                            <option value="144">144</option>
+                            <option value="192">192</option>
+                            <option value="240" selected>240</option>
+                            <option value="260">260</option>
+                            <option value="280">280</option>
+                            <option value="300">300</option>
+                            <option value="320">320</option>
+                        </select>
+                        <select id="titleFontWeight">
+                            <option value="normal">Normal</option>
+                            <option value="bold" selected>Bold</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Subtitle</label>
+                    <div class="input-row">
+                        <div>
+                            <input type="text" id="subtitle" placeholder="Enter subtitle" value="Lord of the Rings 1">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <select id="subtitleFont">
+                            <option value="Verdana">Verdana</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Trebuchet MS" selected>Trebuchet MS</option>
+                            <option value="Impact">Impact</option>
+                            <option value="Palatino">Palatino</option>
+                        </select>
+                        <select id="subtitleFontSize">
+                            <option value="64">64</option>
+                            <option value="96">96</option>
+                            <option value="128">128</option>
+                            <option value="144" selected>144</option>
+                            <option value="192">192</option>
+                            <option value="240">240</option>
+                            <option value="300">300</option>
+                        </select>
+                        <select id="subtitleFontWeight">
+                            <option value="normal" selected>Normal</option>
+                            <option value="bold">Bold</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Author</label>
+                    <div class="input-row">
+                        <div>
+                            <input type="text" id="author" placeholder="Enter author name" value="JRR Tolkien">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <select id="authorFont">
+                            <option value="Verdana" selected>Verdana</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Trebuchet MS">Trebuchet MS</option>
+                            <option value="Impact">Impact</option>
+                            <option value="Palatino">Palatino</option>
+                        </select>
+                        <select id="authorFontSize">
+                            <option value="64">64</option>
+                            <option value="96">96</option>
+                            <option value="128">128</option>
+                            <option value="144">144</option>
+                            <option value="192" selected>192</option>
+                            <option value="240">240</option>
+                            <option value="300">300</option>
+                        </select>
+                        <select id="authorFontWeight">
+                            <option value="normal">Normal</option>
+                            <option value="bold" selected>Bold</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group styles">
+                    <label>Styling</label>
+                    <div class="input-row">
+                        <span>Examples:</span>
+                        <select id="themeExamples">
+                            <option value="" selected>Choose ...</option>
+                            <option value="BW">Black on White</option>
+                            <option value="WB">White on Black</option>
+                            <option value="BS">Black on Silver</option>
+                            <option value="WBl">White on Blue</option>
+                            <option value="WG">White on Green</option>
+                        </select>
+                        <span>Back:</span>
+                        <input type="color" id="backgroundColor" value="#FCFCFC">
+                        <span>Fore:</span>
+                        <input type="color" id="foregroundColor" value="#000000">
+                    </div>
+                    <div class="input-row">
+                        <span>Stripe:</span>
+                        <input type="color" id="stripeColor" value="#E0E0E0">
+                        <span>Border:</span>
+                        <select id="borderWidth">
+                            <option value="0">None</option>
+                            <option value="16">Narrow</option>
+                            <option value="32">Slim</option>
+                            <option value="48">Medium</option>
+                            <option value="64" selected>Thick</option>
+                            <option value="80">Thicker</option>
+                        </select>
+                        <input type="color" id="borderColor" value="#000000">
+                    </div>
+                </div>
+                <div class="button-row">
+                    <button onclick="downloadCover()">Download Cover!</button>
+                </div>
+            </div>
+            <div class="preview-container">
+                <canvas id="coverCanvas" width="1800" height="2700"></canvas>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const themes = {
+            custom: {}, // Will keep current colors
+            BW: { bg: "#FFFFFF", fg: "#000000", border: "#000000", stripe: "#E0E0E0" },
+            WB: { bg: "#000000", fg: "#FFFFFF", border: "#000000", stripe: "#505050" },
+            BS: { bg: "#E0E0E0", fg: "#000000", border: "#000000", stripe: "#A0A0A0" },
+            WBl: { bg: "#0044FF", fg: "#FFFFFF", border: "#0044FF", stripe: "#0077DD" },
+            WG: { bg: "#008020", fg: "#FFFFFF", border: "#008000", stripe: "#30A030" }
+        };
+
+        function applyTheme(themeName) {
+            if (themeName === "") return; // Do nothing if no theme is selected
+            const theme = themes[themeName];
+            document.getElementById("backgroundColor").value = theme.bg;
+            document.getElementById("foregroundColor").value = theme.fg;
+            document.getElementById("borderColor").value = theme.border;
+            document.getElementById("stripeColor").value = theme.stripe;
+
+            drawCover(); // Redraw the cover with new colors
+        }
+
+        document.getElementById("themeExamples").addEventListener("change", function () {
+            applyTheme(this.value);
+            this.value = "";
+        });
+
+        // Update your existing event listeners
+        ['backgroundColor', 'foregroundColor', 'borderColor', 'stripeColor', 'themeExamples'].forEach(id => {
+            document.getElementById(id).addEventListener('input', drawCover);
+        });
+
+        function drawCover() {
+            const canvas = document.getElementById('coverCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Get all colors
+            const backgroundColor = document.getElementById('backgroundColor').value;
+            const foregroundColor = document.getElementById('foregroundColor').value;
+            const stripeColor = document.getElementById('stripeColor').value;
+            const borderColor = document.getElementById('borderColor').value;
+
+            // Clear canvas with selected background color
+            ctx.fillStyle = backgroundColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Set text color to foreground color
+            ctx.fillStyle = foregroundColor;
+
+            // Get input values and fonts
+            let title = document.getElementById('title').value;
+            let subtitle = document.getElementById('subtitle').value;
+            let author = document.getElementById('author').value;
+            const titleFont = document.getElementById('titleFont').value;
+            const titleFontSize = document.getElementById('titleFontSize').value * 1;
+            const titleWeight = document.getElementById('titleFontWeight').value;
+            const subtitleFont = document.getElementById('subtitleFont').value;
+            const subtitleFontSize = document.getElementById('subtitleFontSize').value * 1;
+            const subtitleWeight = document.getElementById('subtitleFontWeight').value;
+            const authorFont = document.getElementById('authorFont').value;
+            const authorFontSize = document.getElementById('authorFontSize').value * 1;
+            const authorWeight = document.getElementById('authorFontWeight').value;
+            const borderWidth = document.getElementById('borderWidth').value * 1;
+
+            // Tidy the text
+            title = title.replace(/  +/g, ' ').trim();
+            subtitle = subtitle.replace(/  +/g, ' ').trim();
+            author = author.replace(/  +/g, ' ').trim();
+
+            // Set up text styles
+            ctx.textAlign = 'center';
+
+            // Calculate positions (20% from top and 85% from top respectively)
+            const topMargin = canvas.height * 0.20;
+            const bottomMargin = canvas.height * 0.85;
+
+            // Draw title
+            const titleLines = title.split('|');
+            ctx.font = `${titleWeight} ${titleFontSize}px "${titleFont}"`;
+
+            // Start title at 20% from top
+            let y = topMargin;
+            titleLines.forEach(line => {
+                ctx.fillText(line.trim(), canvas.width / 2, y);
+                y += titleFontSize * 1.1;
+            });
+
+            // Draw subtitle just below the title (add a small gap)
+            if (subtitle) {
+                y -= (titleFontSize / 2);
+                const subtitleLines = subtitle.split('|');
+                ctx.font = `${subtitleWeight} ${subtitleFontSize}px "${subtitleFont}"`;
+                y += subtitleFontSize; // Small gap between title and subtitle
+
+                subtitleLines.forEach(line => {
+                    ctx.fillText(line.trim(), canvas.width / 2, y);
+                    y += subtitleFontSize * 1.2;
+                });
+            }
+
+            // Draw author
+            const authorLines = author.split('|');
+            ctx.font = `${authorWeight} ${authorFontSize}px "${authorFont}"`;
+
+            // Position last line of author name at 85% from top
+            y = bottomMargin - ((authorLines.length - 1) * 60);
+            const topAuthorY = y;
+
+            // Calculate the height of the author text (for the stripe)
+            authorLines.forEach(line => {
+                y += authorFontSize;
+            });
+
+            // Draw author stripe
+            const y1 = topAuthorY - (authorFontSize);
+            const y2 = y - (authorFontSize * 0.75);
+            ctx.fillStyle = stripeColor;
+            ctx.fillRect(0, y1, canvas.width, y2 - y1);
+
+            // Write the author text
+            ctx.fillStyle = foregroundColor;
+            y = topAuthorY;
+            authorLines.forEach(line => {
+                ctx.fillText(line.trim(), canvas.width / 2, y);
+                y += authorFontSize;
+            });
+
+            // Add a cover border
+            if (borderWidth > 0) {
+                ctx.lineWidth = borderWidth;
+                ctx.strokeStyle = borderColor;
+                ctx.strokeRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        function downloadCover() {
+            const canvas = document.getElementById('coverCanvas');
+            const link = document.createElement('a');
+            link.download = 'book-cover.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Add input event listeners
+        ['title', 'subtitle', 'author',
+            'titleFont', 'subtitleFont', 'authorFont',
+            'titleFontWeight', 'subtitleFontWeight', 'authorFontWeight',
+            'titleFontSize', 'subtitleFontSize', 'authorFontSize',
+            'borderWidth'].forEach(id => {
+                document.getElementById(id).addEventListener('input', drawCover);
+            });
+
+        // Initial draw
+        drawCover();
+    </script>
+</body>
+
+</html>
