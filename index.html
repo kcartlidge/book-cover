@@ -314,6 +314,7 @@
                     </div>
                 </div>
                 <div class="button-row">
+                    <button id="addBackgroundBtn">Upload Background</button>
                     <button onclick="downloadCover()">Download Cover!</button>
                 </div>
             </div>
@@ -367,6 +368,13 @@
             // Clear canvas with selected background color
             ctx.fillStyle = backgroundColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw background image if it exists, with 50% transparency
+            if (backgroundImage) {
+                ctx.globalAlpha = 0.5;  // Set transparency to 50%
+                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+                ctx.globalAlpha = 1.0;  // Reset transparency for other elements
+            }
 
             // Set text color to foreground color
             ctx.fillStyle = foregroundColor;
@@ -473,6 +481,27 @@
             'borderWidth'].forEach(id => {
                 document.getElementById(id).addEventListener('input', drawCover);
             });
+
+        let backgroundImage = null;
+
+        document.getElementById('addBackgroundBtn').addEventListener('click', function () {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function (event) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    backgroundImage = new Image();
+                    backgroundImage.onload = function () {
+                        drawCover();
+                    }
+                    backgroundImage.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+            input.click();
+        });
 
         // Initial draw
         drawCover();
