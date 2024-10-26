@@ -11,8 +11,9 @@ Useful if, for example, you're adding a large number of books to Calibre and don
 - Choose some colours (or an example)
 - Optionally upload a background image
     - Should be 1800x2700 pixels
-    - Currently displayed at 50% opacity
-- Hit the `Download Cover!` button
+    - Opacity adjustable from 10% to 100%
+      - The default is 80%
+- Hit the `Download Cover` button
 
 [MIT license](./LICENSE)
 
