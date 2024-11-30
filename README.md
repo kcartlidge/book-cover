@@ -4,6 +4,8 @@ Stand-alone web page to generate very simple book covers as 1800x2700 PNGs. Supp
 
 Useful if, for example, you're adding a large number of books to Calibre and don't have the time to find decent cover images for them all at once.
 
+Fully working demo at: [https://book-cover.netlify.app](https://book-cover.netlify.app/)
+
 - Download the [`index.html`](./index.html) file
 - Open it in your browser
 - Update the title, subtitle, and author
